@@ -1,0 +1,6 @@
+[2025-06-30 08:58:03] [INFO] New session started
+[2025-06-30 09:02:13] [INFO] Setup force enabled by user
+[2025-06-30 09:02:13] [INFO] Setup force enabled! You can now continue.
+[2025-06-30 09:02:14] [All systems ready for AI pair programming!] 🎉 Setup Complete!
+[2025-06-30 09:02:14] [INFO] Setup completed successfully - all dependencies and AutoHotkey detected
+[2025-06-30 09:02:14] [INFO] Monitored file changed: config.json

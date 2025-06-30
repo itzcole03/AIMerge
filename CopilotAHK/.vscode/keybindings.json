@@ -1,0 +1,61 @@
+[
+    {
+        "key": "ctrl+shift+g",
+        "command": "cursor.chat.newChat",
+        "args": {
+            "template": "Generate Smart Context for current work using @copilot_context_current_work_latest.md"
+        }
+    },
+    {
+        "key": "ctrl+shift+a",
+        "command": "cursor.chat.applyAll",
+        "when": "cursor.chat.hasChanges"
+    },
+    {
+        "key": "ctrl+shift+r",
+        "command": "cursor.chat.rejectAll",
+        "when": "cursor.chat.hasChanges"
+    },
+    {
+        "key": "ctrl+shift+c",
+        "command": "cursor.chat.newChat",
+        "args": {
+            "template": "AHK Integration Help - Current AHK script: @CopilotAFK_Toggle_Assistant.ahk, Python GUI: @copilot_dual_agent_gui.py. Issue: "
+        }
+    },
+    {
+        "key": "ctrl+shift+p",
+        "command": "cursor.chat.newChat",
+        "args": {
+            "template": "Using implementation plan @implementation_plan.md and current context @ai_context.md, help me with: "
+        }
+    },
+    {
+        "key": "ctrl+shift+t",
+        "command": "cursor.chat.newChat",
+        "args": {
+            "template": "Test-driven development: Write tests first for this functionality, then implement. Context: @copilot_context_testing_latest.md. Requirement: "
+        }
+    },
+    {
+        "key": "ctrl+shift+d",
+        "command": "cursor.chat.newChat",
+        "args": {
+            "template": "Debug help using @copilot_context_debug_latest.md. Error description: "
+        }
+    },
+    {
+        "key": "ctrl+shift+s",
+        "command": "workbench.action.files.save",
+        "when": "!inDebugMode"
+    },
+    {
+        "key": "f5",
+        "command": "python.execInTerminal",
+        "when": "editorTextFocus && editorLangId == 'python'"
+    },
+    {
+        "key": "ctrl+f5",
+        "command": "workbench.action.terminal.new"
+    }
+]

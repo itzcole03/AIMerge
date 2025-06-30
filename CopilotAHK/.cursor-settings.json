@@ -1,0 +1,121 @@
+{
+    "cursor.chat.maxFileContext": 50,
+    "cursor.chat.includeWorkspaceContext": true,
+    "cursor.chat.autoIncludeRecentFiles": true,
+    "cursor.chat.contextWindow": "extended",
+    "cursor.chat.autoApplyEdits": false,
+    "cursor.chat.confirmBeforeApply": true,
+    "cursor.chat.batchEdits": true,
+    "cursor.chat.streaming": true,
+    "cursor.chat.parallelRequests": true,
+    "cursor.chat.cacheResponses": true,
+    "cursor.chat.preloadContext": true,
+    "cursor.chat.autoMode": {
+        "enabled": false,
+        "maxIterations": 5,
+        "autoApplySimpleEdits": false,
+        "requireConfirmationFor": [
+            "fileCreation",
+            "fileDeletion",
+            "largeChanges"
+        ],
+        "stopOnErrors": true,
+        "continueOnWarnings": true
+    },
+    "cursor.chat.templates": {
+        "smartContext": {
+            "name": "Load Smart Context",
+            "prompt": "Using the focused context from @copilot_context_current_work_latest.md, help me with: ",
+            "autoIncludeFiles": [
+                "copilot_context_*.md",
+                ".cursorrules"
+            ]
+        },
+        "ahkIntegration": {
+            "name": "AHK Integration Help",
+            "prompt": "Help me with AutoHotkey integration. Current AHK script: @CopilotAFK_Toggle_Assistant.ahk, Python GUI: @copilot_dual_agent_gui.py. Issue: ",
+            "autoIncludeFiles": [
+                "CopilotAFK_Toggle_Assistant.ahk",
+                "copilot_dual_agent_gui.py"
+            ]
+        },
+        "implementationPlan": {
+            "name": "Implementation Planning",
+            "prompt": "Using the implementation plan @implementation_plan.md and AI context @ai_context.md, help me implement: ",
+            "autoIncludeFiles": [
+                "implementation_plan.md",
+                "ai_context.md"
+            ]
+        },
+        "testDriven": {
+            "name": "Test-Driven Development",
+            "prompt": "Following TDD principles, write tests first then implement. Testing context: @copilot_context_testing_latest.md. Feature to implement: ",
+            "autoIncludeFiles": [
+                "test_*.py",
+                "copilot_context_testing_*.md"
+            ]
+        },
+        "debugHelp": {
+            "name": "Debug Assistant",
+            "prompt": "Debug this issue using context from @copilot_context_debug_latest.md. Problem description: ",
+            "autoIncludeFiles": [
+                "copilot_context_debug_*.md"
+            ]
+        },
+        "architectureReview": {
+            "name": "Architecture Review",
+            "prompt": "Review architecture and suggest improvements using @copilot_context_architecture_latest.md. Focus area: ",
+            "autoIncludeFiles": [
+                "copilot_context_architecture_*.md",
+                "README.md"
+            ]
+        }
+    },
+    "cursor.chat.contextSources": [
+        "copilot_context_current_work_*.md",
+        "copilot_context_architecture_*.md",
+        "copilot_context_api_docs_*.md",
+        "copilot_context_debug_*.md",
+        "copilot_context_testing_*.md",
+        "implementation_plan.md",
+        "ai_context.md",
+        ".cursorrules"
+    ],
+    "cursor.chat.excludePatterns": [
+        "gitingest_summary.txt",
+        "*.pyc",
+        "__pycache__/**",
+        ".git/**",
+        "*.log",
+        "*.tmp",
+        "node_modules/**"
+    ],
+    "cursor.chat.smartContextBuilder": {
+        "enabled": true,
+        "preferFocusedContext": true,
+        "maxContextLines": 3000,
+        "autoUpdateDetection": true,
+        "contextTypes": [
+            "current_work",
+            "architecture",
+            "api_docs",
+            "debug",
+            "testing",
+            "custom"
+        ]
+    },
+    "cursor.chat.ahkIntegration": {
+        "enabled": true,
+        "ahkScriptPath": "CopilotAFK_Toggle_Assistant.ahk",
+        "pythonGuiPath": "copilot_dual_agent_gui.py",
+        "autoDetectAhkPath": true,
+        "verifyDependencies": true
+    },
+    "cursor.chat.autonomousSession": {
+        "enabled": true,
+        "setupWizard": true,
+        "walkAwayMode": false,
+        "requireConfirmation": true,
+        "maxAutonomousIterations": 10
+    }
+}

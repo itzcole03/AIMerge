@@ -1,0 +1,3 @@
+[2025-06-30 09:57:14] [INFO] New session started
+[2025-06-30 09:57:16] [INFO] Application initialized
+[2025-06-30 09:57:46] [INFO] Application closing

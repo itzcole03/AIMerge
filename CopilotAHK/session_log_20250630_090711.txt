@@ -1,0 +1,3 @@
+[2025-06-30 09:07:11] [INFO] New session started
+[2025-06-30 09:07:12] [INFO] Application initialized
+[2025-06-30 09:07:27] [INFO] Setup completed successfully

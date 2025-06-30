@@ -1,0 +1,7 @@
+Here is a summary of the codebase. Use this for context when implementing the frontend-backend integration: 
+
+--- DIRECTORY STRUCTURE ---
+
+--- README.md ---
+
+--- FILE LIST ---

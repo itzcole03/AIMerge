@@ -1,0 +1,10 @@
+[2025-06-30 09:58:05] [INFO] New session started
+[2025-06-30 09:58:07] [INFO] Application initialized
+[2025-06-30 09:58:12] [INFO] Workspace changed to: C:/Users/bcmad/Downloads/A1Betting-master-27-25-main-main/A1Betting-master-27-25-main-main
+[2025-06-30 09:58:24] [INFO] Project context generated successfully
+[2025-06-30 09:59:10] [INFO] AFK Mode activated
+[2025-06-30 09:59:15] [INFO] AutoHotkey script started: C:\Users\bcmad\Downloads\CopilotAHK\CopilotAFK_Toggle_Assistant.ahk
+[2025-06-30 09:59:15] [INFO] Application directory: C:\Users\bcmad\Downloads\CopilotAHK
+[2025-06-30 09:59:15] [INFO] Workspace directory: C:/Users/bcmad/Downloads/A1Betting-master-27-25-main-main/A1Betting-master-27-25-main-main
+[2025-06-30 10:00:25] [INFO] AFK automation started successfully
+[2025-06-30 10:07:01] [INFO] Application closing

@@ -1,0 +1,3 @@
+[2025-06-30 09:17:37] [INFO] New session started
+[2025-06-30 09:17:39] [INFO] Application initialized
+[2025-06-30 09:18:16] [INFO] Workspace changed to: C:/Users/bcmad/Downloads/A1Betting-master-27-25-main-main/A1Betting-master-27-25-main-main

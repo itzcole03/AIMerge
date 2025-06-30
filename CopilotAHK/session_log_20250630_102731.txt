@@ -1,0 +1,5 @@
+[2025-06-30 10:27:31] [INFO] New session started
+[2025-06-30 10:27:33] [INFO] Application initialized
+[2025-06-30 10:27:38] [INFO] AiSource connection failed
+[2025-06-30 10:28:07] [INFO] AiSource connection failed
+[2025-06-30 10:28:16] [INFO] Application closing

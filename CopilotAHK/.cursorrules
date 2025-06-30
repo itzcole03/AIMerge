@@ -1,0 +1,115 @@
+# AI Pair Programming Rules for AHK Automation Project
+
+## Project Context
+
+This is an AutoHotkey automation project for VS Code Copilot integration with Python GUI controls.
+The goal is autonomous AI pair programming with walk-away automation capabilities.
+
+## Code Style & Standards
+
+- Use type hints for all Python functions
+- Follow PEP 8 naming conventions
+- Add docstrings to all functions
+- Use descriptive variable names
+- Handle exceptions gracefully with specific error messages
+- Prefer edit_file over search_replace for files under 2500 lines
+- Use subprocess verification to avoid Python import caching issues
+
+## Automation-Specific Rules
+
+- Always verify dependencies before operations using subprocess
+- Use subprocess for reliable dependency checking (avoid import caching)
+- Provide visual feedback for long-running operations with progress windows
+- Keep GUI responsive with threading for background operations
+- Create comprehensive error handling for automation failures
+- Test AutoHotkey path detection across different installation locations
+- Provide fallback options for AHK execution
+
+## File Organization
+
+- Keep main GUI logic in copilot_dual_agent_gui.py
+- Use consistent function naming: verb_noun() pattern
+- Group related functions together (dependencies, AHK, context, etc.)
+- Add type annotations for better IDE support
+- Maintain clean separation between GUI, automation, and context management
+
+## Testing Requirements
+
+- Test all button functionality before deployment
+- Verify AutoHotkey integration and path detection
+- Check dependency installation and verification
+- Validate file operations and context generation
+- Ensure Smart Context Builder creates focused outputs
+
+## Integration Points
+
+- AHK script: CopilotAFK_Toggle_Assistant.ahk
+- Python dependencies: pyautogui, Pillow, gitingest
+- Context files: Smart Context Builder outputs (copilot_context_*.md)
+- Project summaries: GitIngest integration (gitingest_summary.txt)
+- Implementation plans: implementation_plan.md
+- AI context: ai_context.md
+
+## Smart Context Usage
+
+- Use Smart Context Builder outputs instead of full GitIngest summaries
+- Prefer focused context files (1,000-3,000 lines) over massive dumps (100,000+ lines)
+- Generate different context types for different tasks:
+  - Current Work Focus: for active development
+  - Architecture Overview: for structural understanding
+  - API Documentation: for interface work
+  - Debug Context: for troubleshooting
+  - Testing Context: for test development
+- Keep context files updated when project evolves
+
+## Autonomous Operation
+
+- Minimize user intervention prompts for walk-away automation
+- Provide clear status feedback with emojis and progress indicators
+- Handle edge cases gracefully with comprehensive error handling
+- Enable autonomous session setup with one-click workflows
+- Auto-detect and warn about outdated context files
+- Use background threading to keep GUI responsive
+
+## AutoHotkey Integration
+
+- When working with AHK scripts, always verify AutoHotkey v2 compatibility
+- Use proper error handling for subprocess calls to AHK
+- Test AHK path detection: C:\Program Files\AutoHotkey\v2\AutoHotkey.exe
+- Provide fallback options for AHK execution (PATH, different install locations)
+- Ensure AHK automation works with F6/F7/F8 hotkeys
+- Integrate AHK controls with Python GUI buttons
+
+## Automation Workflow Best Practices
+
+1. Generate full GitIngest summary for comprehensive project understanding
+2. Create focused context with Smart Context Builder for specific tasks
+3. Use implementation plans to guide AI development
+4. Maintain clean git history with conventional commits
+5. Test-driven development with TDD helper
+6. Use prompt optimizer for better AI interactions
+7. Keep context curated and focused, not overwhelming
+
+## Error Handling Patterns
+
+- Use try/except blocks with specific exception types
+- Provide user-friendly error messages with actionable suggestions
+- Log errors for debugging while showing clean messages to users
+- Implement graceful degradation when dependencies missing
+- Use subprocess verification to avoid import caching false negatives
+
+## Performance Considerations
+
+- Use threading for long-running operations (GitIngest, dependency installation)
+- Implement progress indicators for user feedback
+- Cache dependency verification results when appropriate
+- Use efficient file operations for context generation
+- Minimize GUI blocking operations
+
+## Context Window Optimization
+
+- Prioritize Smart Context Builder outputs over raw GitIngest files
+- Use focused context files that fit within Copilot/Claude context limits
+- Reference specific files with @filename syntax when relevant
+- Keep prompts laser-focused on current task
+- Avoid dumping entire codebase context unnecessarily

@@ -1,0 +1,5 @@
+[2025-06-30 08:56:36] [INFO] New session started
+[2025-06-30 08:56:52] [INFO] Setup force enabled by user
+[2025-06-30 08:56:52] [INFO] Setup force enabled! You can now continue.
+[2025-06-30 08:56:53] [All systems ready for AI pair programming!] 🎉 Setup Complete!
+[2025-06-30 08:56:53] [INFO] Setup completed successfully - all dependencies and AutoHotkey detected

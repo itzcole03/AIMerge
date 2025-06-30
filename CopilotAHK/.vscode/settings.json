@@ -1,0 +1,85 @@
+{
+    "cursor.chat.welcomeMessage": "Ready to enhance AHK automation workflow with Smart Context Builder",
+    "cursor.chat.defaultModel": "claude-3.5-sonnet",
+    "cursor.chat.codeGeneration.preferredLanguage": "python",
+    "cursor.chat.includeFileTree": true,
+    "cursor.chat.autoSuggestFiles": true,
+    "cursor.chat.maxFileContext": 50,
+    "cursor.chat.includeWorkspaceContext": true,
+    "cursor.chat.autoIncludeRecentFiles": true,
+    "cursor.chat.contextWindow": "extended",
+    "cursor.chat.autoApplyEdits": false,
+    "cursor.chat.confirmBeforeApply": true,
+    "cursor.chat.batchEdits": true,
+    "cursor.chat.streaming": true,
+    "cursor.chat.parallelRequests": true,
+    "cursor.chat.cacheResponses": true,
+    "cursor.chat.preloadContext": true,
+    "cursor.chat.contextSources": [
+        "copilot_context_current_work_*.md",
+        "copilot_context_architecture_*.md",
+        "copilot_context_api_docs_*.md",
+        "copilot_context_debug_*.md",
+        "copilot_context_testing_*.md",
+        "implementation_plan.md",
+        "ai_context.md",
+        ".cursorrules"
+    ],
+    "cursor.chat.excludePatterns": [
+        "gitingest_summary.txt",
+        "*.pyc",
+        "__pycache__/**",
+        ".git/**",
+        "*.log",
+        "*.tmp"
+    ],
+    "files.associations": {
+        "*.ahk": "autohotkey",
+        "*.md": "markdown",
+        ".cursorrules": "markdown"
+    },
+    "python.defaultInterpreterPath": "python",
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "python.linting.pycodestyleEnabled": true,
+    "python.formatting.provider": "black",
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.autoImportCompletions": true,
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000,
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.patterns": {
+        "*.py": "${capture}.pyc",
+        "copilot_dual_agent_gui.py": "test_*.py",
+        "requirements.txt": "*.txt",
+        "*.md": "*.md.backup"
+    },
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "git.autofetch": true,
+    "workbench.editor.enablePreview": false,
+    "workbench.editor.enablePreviewFromQuickOpen": false,
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "terminal.integrated.fontSize": 12,
+    "autohotkey.syntaxes": "v2",
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/bower_components": true,
+        "**/*.code-search": true,
+        "**/__pycache__": true,
+        "**/.git": true,
+        "**/gitingest_summary.txt": true
+    },
+    "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/node_modules/*/**": true,
+        "**/__pycache__/**": true
+    },
+    "cursorpyright.analysis.autoImportCompletions": true,
+    "cursorpyright.analysis.typeCheckingMode": "basic"
+}

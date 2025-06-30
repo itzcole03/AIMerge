@@ -1,0 +1,2 @@
+[2025-06-30 10:25:46] [INFO] New session started
+[2025-06-30 10:25:48] [INFO] Application initialized

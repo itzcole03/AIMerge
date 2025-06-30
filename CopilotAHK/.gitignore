@@ -1,0 +1,81 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/launch.json
+.vscode/tasks.json
+.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Large GitIngest summaries (use Smart Context instead)
+gitingest_summary.txt
+
+# Keep Smart Context outputs (these are focused and useful)
+!copilot_context_*.md
+
+# Keep configuration files
+!.cursorrules
+!.cursor-settings.json
+!.vscode/settings.json
+!.vscode/keybindings.json
+
+# Keep important project files
+!requirements.txt
+!*.ahk
+!*.py
+!*.md
+!README.md 
