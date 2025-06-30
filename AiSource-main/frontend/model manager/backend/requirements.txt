@@ -1,4 +1,17 @@
-fastapi==0.104.1
-uvicorn[standard]==0.24.0
-psutil==5.9.6
-requests==2.31.0
+fastapi>=0.104.1
+uvicorn[standard]>=0.24.0
+websockets>=12.0
+pydantic>=2.5.0
+python-multipart>=0.0.6
+aiofiles>=23.2.1
+
+# Automation dependencies
+pyautogui>=0.9.54
+Pillow>=10.0.0
+
+# Optional AiSource dependencies (install if available)
+# qdrant-client>=1.6.0
+# torch>=2.0.0
+# transformers>=4.35.0
+# numpy>=1.24.0
+# pandas>=2.1.0

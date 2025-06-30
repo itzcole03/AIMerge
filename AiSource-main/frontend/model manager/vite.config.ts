@@ -1,22 +1,28 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    exclude: ['lucide-react'],
+    exclude: ["lucide-react"],
+  },
+  define: {
+    // Prevent external scripts from interfering with error overlay
+    "process.env.NODE_ENV": JSON.stringify(
+      process.env.NODE_ENV || "development",
+    ),
   },
   build: {
-    target: 'esnext',
-    minify: 'esbuild',
+    target: "esnext",
+    minify: "esbuild",
     sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
-          charts: ['recharts'],
-          icons: ['lucide-react'],
+          vendor: ["react", "react-dom"],
+          charts: ["recharts"],
+          icons: ["lucide-react"],
         },
       },
     },
@@ -24,59 +30,65 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173,
+    // Configure headers to prevent external script conflicts
+    headers: {
+      "Cross-Origin-Embedder-Policy": "unsafe-none",
+      "Cross-Origin-Opener-Policy": "unsafe-none",
+    },
     proxy: {
       // API routes - Route to backend on port 8002
-      '^/api': {
-        target: 'http://localhost:8002',
+      "^/api": {
+        target: "http://localhost:8002",
         changeOrigin: true,
         secure: false,
         timeout: 10000,
-        rewrite: (path) => path.replace(/^\/api/, '')
+        rewrite: (path) => path.replace(/^\/api/, ""),
       },
       // Backend routes
-      '^/backend': {
-        target: 'http://localhost:8002',
+      "^/backend": {
+        target: "http://localhost:8002",
         changeOrigin: true,
         secure: false,
         timeout: 10000,
-        rewrite: (path) => path.replace(/^\/backend/, '')
+        rewrite: (path) => path.replace(/^\/backend/, ""),
       },
       // V1 API routes (for model providers)
-      '^/v1': {
-        target: 'http://localhost:8002',
-        changeOrigin: true,
-        secure: false,
-        timeout: 10000
-      },
-      // Health check endpoint
-      '^/health': {
-        target: 'http://localhost:8002',
-        changeOrigin: true,
-        secure: false,
-        timeout: 5000
-      },
-      // Marketplace providers endpoint (must come before general providers)
-      '^/providers/marketplace': {
-        target: 'http://localhost:8002',
+      "^/v1": {
+        target: "http://localhost:8002",
         changeOrigin: true,
         secure: false,
         timeout: 10000,
-        rewrite: (path) => path.replace(/^\/providers\/marketplace/, '/providers/marketplace')
+      },
+      // Health check endpoint
+      "^/health": {
+        target: "http://localhost:8002",
+        changeOrigin: true,
+        secure: false,
+        timeout: 5000,
+      },
+      // Marketplace providers endpoint (must come before general providers)
+      "^/providers/marketplace": {
+        target: "http://localhost:8002",
+        changeOrigin: true,
+        secure: false,
+        timeout: 10000,
+        rewrite: (path) =>
+          path.replace(/^\/providers\/marketplace/, "/providers/marketplace"),
       },
       // General providers endpoint
-      '^/providers': {
-        target: 'http://localhost:8002',
+      "^/providers": {
+        target: "http://localhost:8002",
         changeOrigin: true,
         secure: false,
-        timeout: 10000
+        timeout: 10000,
       },
       // System endpoint
-      '^/system': {
-        target: 'http://localhost:8002',
+      "^/system": {
+        target: "http://localhost:8002",
         changeOrigin: true,
         secure: false,
-        timeout: 10000
-      }
+        timeout: 10000,
+      },
     },
   },
   preview: {

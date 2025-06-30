@@ -1,0 +1,6 @@
+{
+  "command": "cd AiSource-main; cd frontend; npm run dev",
+  "serverUrl": "localhost:5173",
+  "authenticateProxy": false,
+  "commitMode": "commits"
+}

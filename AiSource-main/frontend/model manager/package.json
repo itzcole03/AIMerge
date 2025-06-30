@@ -1,21 +1,24 @@
 {
-  "name": "unified-model-manager",
+  "name": "unified-ai-copilot-platform",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
+  "description": "Unified AI Copilot Platform - Combining AiSource model management with CopilotAHK automation",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start-backend": "cd backend && python server.py",
-    "start-marketplace": "node marketplace-aggregator-fixed.js",
-    "start-full": "concurrently \"npm run start-backend\" \"npm run start-marketplace\" \"npm run dev\"",
+    "start-backend": "cd backend && python unified_server.py",
+    "start-automation": "python automation_bridge.py",
+    "start-unified": "concurrently \"npm run start-backend\" \"npm run dev\"",
     "install-backend": "cd backend && pip install -r requirements.txt",
+    "install-automation": "pip install pyautogui Pillow",
     "build-production": "npm run build && npm run build-docs",
     "build-docs": "echo 'Documentation built'",
     "test": "echo 'Tests passed'",
-    "deploy": "npm run build && echo 'Ready for deployment'"
+    "deploy": "npm run build && echo 'Ready for deployment'",
+    "setup": "npm install && npm run install-backend && npm run install-automation"
   },
   "dependencies": {
     "cheerio": "^1.1.0",
@@ -43,5 +46,17 @@
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.3.0",
     "vite": "^5.4.2"
-  }
+  },
+  "keywords": [
+    "ai",
+    "copilot",
+    "automation",
+    "model-management",
+    "multi-agent",
+    "autohotkey",
+    "llm",
+    "development-tools"
+  ],
+  "author": "Cole Madison",
+  "license": "MIT"
 }

@@ -1,7 +1,9 @@
-// Cache for backend URL with TTL (5 minutes)
-const BACKEND_URL_CACHE_TTL = 5 * 60 * 1000;
+import { isolatedFetch } from "../utils/errorOverlayPatch";
+
+// Cache for backend URL with TTL (10 minutes for better performance)
+const BACKEND_URL_CACHE_TTL = 10 * 60 * 1000;
 const DEFAULT_PORTS = [8002, 8000, 8080, 8081, 3000, 5000];
-const FALLBACK_URL = 'http://localhost:8080';
+const FALLBACK_URL = "http://localhost:8080";
 
 interface BackendUrlCache {
   url: string | null;
@@ -25,49 +27,81 @@ let checkInProgress = false;
  */
 async function checkUrlReachable(
   url: string,
-  options: { signal?: AbortSignal; timeout?: number } = {}
+  options: { signal?: AbortSignal; timeout?: number } = {},
 ): Promise<boolean> {
-  const maxAttempts = 2;
-  const initialDelay = 300; // Start with 300ms
-  const maxDelay = 3000; // Max 3 seconds
-  const timeout = options.timeout || 2000;
-  
-  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeout);
-    
-    try {
-      const response = await fetch(`${url}/health`, {
-        signal: controller.signal,
-        headers: {
-          'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache'
-        }
-      });
-      
-      clearTimeout(timeoutId);
-      
-      if (response.ok) {
-        try {
-          const data = await response.json();
-          return data.status === 'healthy';
-        } catch (e) {
-          console.debug('Invalid JSON response from health check:', e);
-          return false;
-        }
-      }
-    } catch (error) {
-      clearTimeout(timeoutId);
-      if (attempt === maxAttempts) return false;
-      
-      // Exponential backoff with jitter
-      const delay = Math.min(initialDelay * Math.pow(2, attempt - 1), maxDelay);
-      const jitter = Math.random() * 500; // Add up to 500ms jitter
-      await new Promise(resolve => setTimeout(resolve, delay + jitter));
-    }
+  const timeout = options.timeout || 1000;
+
+  // Early return if external signal is already aborted
+  if (options.signal?.aborted) {
+    return false;
   }
-  
-  return false;
+
+  return new Promise((resolve) => {
+    const controller = new AbortController();
+    let isResolved = false;
+    let timeoutId: NodeJS.Timeout | undefined;
+
+    const cleanup = () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = undefined;
+      }
+    };
+
+    const resolveOnce = (value: boolean) => {
+      if (!isResolved) {
+        isResolved = true;
+        cleanup();
+        resolve(value);
+      }
+    };
+
+    // Handle external signal abortion
+    const abortHandler = () => {
+      controller.abort();
+      resolveOnce(false);
+    };
+
+    if (options.signal) {
+      if (options.signal.aborted) {
+        resolveOnce(false);
+        return;
+      }
+      options.signal.addEventListener("abort", abortHandler, { once: true });
+    }
+
+    // Set up timeout
+    timeoutId = setTimeout(() => {
+      controller.abort();
+      resolveOnce(false);
+    }, timeout);
+
+    // Make the fetch request using isolated fetch to avoid external script interference
+    isolatedFetch(`${url}/health`, {
+      signal: controller.signal,
+      headers: {
+        "Cache-Control": "no-cache",
+        Pragma: "no-cache",
+        Accept: "application/json",
+      },
+      mode: "cors",
+    })
+      .then(async (response) => {
+        if (response.ok) {
+          try {
+            const data = await response.json();
+            resolveOnce(data.status === "healthy");
+          } catch {
+            resolveOnce(response.status === 200);
+          }
+        } else {
+          resolveOnce(false);
+        }
+      })
+      .catch(() => {
+        resolveOnce(false);
+      });
+  });
 }
 
 /**
@@ -75,120 +109,154 @@ async function checkUrlReachable(
  */
 export const getBackendUrl = async (forceRefresh = false): Promise<string> => {
   const now = Date.now();
-  
+
   // Return cached URL if it's still valid and not marked as failed
-  if (!forceRefresh && backendUrlCache.url && now - backendUrlCache.lastChecked < BACKEND_URL_CACHE_TTL) {
+  if (
+    !forceRefresh &&
+    backendUrlCache.url &&
+    now - backendUrlCache.lastChecked < BACKEND_URL_CACHE_TTL
+  ) {
     return backendUrlCache.url;
   }
-  
-  // If we recently failed, don't retry too often
-  if (backendUrlCache.lastError && now - backendUrlCache.lastChecked < 10000) {
-    console.debug('Skipping backend check due to recent error');
+
+  // If we recently failed, don't retry too often (increased delay)
+  if (backendUrlCache.lastError && now - backendUrlCache.lastChecked < 30000) {
+    console.debug("Skipping backend check due to recent error");
     return FALLBACK_URL;
   }
-  
+
   // Prevent concurrent checks
   if (checkInProgress) {
     if (backendUrlCache.url) return backendUrlCache.url;
-    console.debug('Backend check already in progress, returning fallback');
+    console.debug("Backend check already in progress, returning fallback");
     return FALLBACK_URL;
   }
-  
+
   checkInProgress = true;
   backendUrlCache.isChecking = true;
   backendUrlCache.lastError = null;
-  
+
   try {
     // Try to read from config file first
     try {
-      const response = await fetch('/backend_config.json', {
-        cache: 'no-cache',
-        signal: AbortSignal.timeout(1500),
-        headers: { 'Cache-Control': 'no-cache' }
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 1500);
+
+      const response = await isolatedFetch("/backend_config.json", {
+        cache: "no-cache",
+        signal: controller.signal,
+        headers: { "Cache-Control": "no-cache" },
       });
-      
+
+      clearTimeout(timeoutId);
+
       if (response.ok) {
         try {
           const config = await response.json();
           if (config?.backend_port) {
             const url = `http://localhost:${config.backend_port}`;
             const isReachable = await checkUrlReachable(url, { timeout: 1500 });
-            
+
             if (isReachable) {
-              console.log(`✅ Backend confirmed running on port ${config.backend_port}`);
+              console.log(
+                `✅ Backend confirmed running on port ${config.backend_port}`,
+              );
               backendUrlCache.url = url;
               backendUrlCache.lastChecked = now;
               return url;
             }
           }
         } catch (e) {
-          console.debug('Error parsing backend config:', e);
+          console.debug("Error parsing backend config:", e);
         }
       }
     } catch (error) {
-      console.debug('Could not read backend config:', error);
+      console.debug("Could not read backend config:", error);
     }
-    
-    // Fallback to common ports with parallel health checks
+
+    // Fallback to common ports with optimized checking
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000);
-    
+    const timeoutId = setTimeout(() => controller.abort(), 3000); // Reduced timeout
+
     try {
-      // Race all port checks with a timeout
-      const checkPromises = DEFAULT_PORTS.map(port => 
-        checkUrlReachable(`http://localhost:${port}`, { 
-          signal: controller.signal,
-          timeout: 1500
-        })
-        .then(isReachable => isReachable ? port : null)
-        .catch(() => null)
-      );
-      
-      // Wait for the first successful check or all to fail
-      const workingPort = await Promise.race([
-        Promise.race(checkPromises),
-        new Promise<number | null>(resolve => setTimeout(() => resolve(null), 4000))
-      ]);
-      
-      if (workingPort) {
-        const url = `http://localhost:${workingPort}`;
-        console.log(`✅ Found working backend on port ${workingPort}`);
-        backendUrlCache.url = url;
-        backendUrlCache.lastChecked = now;
-        return url;
+      // Check ports sequentially instead of parallel to reduce load
+      for (const port of DEFAULT_PORTS) {
+        if (controller.signal.aborted) break;
+
+        const isReachable = await checkUrlReachable(
+          `http://localhost:${port}`,
+          {
+            signal: controller.signal,
+            timeout: 800, // Faster individual checks
+          },
+        );
+
+        if (isReachable) {
+          const url = `http://localhost:${port}`;
+          console.log(`✅ Found working backend on port ${port}`);
+          backendUrlCache.url = url;
+          backendUrlCache.lastChecked = now;
+          clearTimeout(timeoutId);
+          return url;
+        }
       }
     } finally {
       clearTimeout(timeoutId);
       controller.abort();
     }
   } catch (error) {
-    console.debug('Backend connection attempt failed:', error);
-    const connectionError = new Error('Could not connect to backend. Please make sure the backend server is running.');
+    console.debug("Backend connection attempt failed:", error);
+    const connectionError = new Error(
+      "Could not connect to backend. Please make sure the backend server is running.",
+    );
     backendUrlCache.lastError = connectionError;
     backendUrlCache.lastChecked = now;
-    console.warn('Using fallback backend URL:', FALLBACK_URL);
+    console.warn("Using fallback backend URL:", FALLBACK_URL);
     return FALLBACK_URL;
   } finally {
     checkInProgress = false;
     backendUrlCache.isChecking = false;
   }
-  
+
   // If we get here, no backend was found but we didn't throw
-  console.warn('No backend found, using fallback URL:', FALLBACK_URL);
+  console.warn("No backend found, using fallback URL:", FALLBACK_URL);
   return FALLBACK_URL;
+};
+
+/**
+ * Get cached backend URL without triggering new detection
+ */
+export const getCachedBackendUrl = (): string => {
+  const now = Date.now();
+
+  // Return cached URL if available and not too old
+  if (
+    backendUrlCache.url &&
+    now - backendUrlCache.lastChecked < BACKEND_URL_CACHE_TTL
+  ) {
+    return backendUrlCache.url;
+  }
+
+  // Return fallback if no cache or cache is stale
+  return FALLBACK_URL;
+};
+
+/**
+ * Reset the backend URL cache to force re-detection
+ */
+export const resetBackendUrlCache = (): void => {
+  backendUrlCache.url = null;
+  backendUrlCache.lastChecked = 0;
+  backendUrlCache.lastError = null;
+  backendUrlCache.isChecking = false;
 };
 
 // Cache the backend URL to avoid repeated detection
 let cachedBackendUrl: string | null = null;
 
-export const getCachedBackendUrl = async (): Promise<string> => {
+export const getCachedBackendUrlAsync = async (): Promise<string> => {
   if (!cachedBackendUrl) {
     cachedBackendUrl = await getBackendUrl();
   }
   return cachedBackendUrl;
-};
-
-// Reset cache when needed (e.g., on connection errors)
-export const resetBackendUrlCache = (): void => {
-  cachedBackendUrl = null;
 };

@@ -1,11 +1,12 @@
-import { useState } from 'react';
-import { useNotifications } from './useNotifications';
-import { getBackendUrl } from '../services/backendConfig';
+import { useState } from "react";
+import { useNotifications } from "./useNotifications";
+import { getBackendUrl } from "../services/backendConfig";
+import { isolatedFetch } from "../utils/errorOverlayPatch";
 
-type ProviderAction = 'start' | 'stop' | 'restart' | 'status';
+type ProviderAction = "start" | "stop" | "restart" | "status";
 
 interface ProviderControlResult {
-  status: 'success' | 'error';
+  status: "success" | "error";
   message?: string;
   logs?: string[];
   port?: number;
@@ -19,17 +20,20 @@ export function useProviderControl() {
   const controlProvider = async (
     action: ProviderAction,
     provider: string,
-    modelPath?: string
+    modelPath?: string,
   ): Promise<ProviderControlResult> => {
     setIsLoading(true);
-    
+
     try {
       const backendUrl = await getBackendUrl();
-      const response = await fetch(`${backendUrl}/api/providers/${provider}/${action}`, {
-        method: action === 'status' ? 'GET' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: action === 'start' ? JSON.stringify({ modelPath }) : undefined
-      });
+      const response = await isolatedFetch(
+        `${backendUrl}/api/providers/${provider}/${action}`,
+        {
+          method: action === "status" ? "GET" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: action === "start" ? JSON.stringify({ modelPath }) : undefined,
+        },
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -38,27 +42,23 @@ export function useProviderControl() {
       const result: ProviderControlResult = await response.json();
 
       addNotification(
-        result.status === 'success' ? 'success' : 'error',
-        `${provider} ${action} ${result.status === 'success' ? 'successful' : 'failed'}`,
-        result.message || (action === 'start' ? 'Server started in background' : ''),
-        5000
+        result.status === "success" ? "success" : "error",
+        `${provider} ${action} ${result.status === "success" ? "successful" : "failed"}`,
+        result.message ||
+          (action === "start" ? "Server started in background" : ""),
+        5000,
       );
 
       return result;
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : 'Unknown error';
-      
-      addNotification(
-        'error',
-        `${provider} ${action} failed`,
-        message,
-        8000
-      );
+      const message = error instanceof Error ? error.message : "Unknown error";
 
-      return { 
-        status: 'error', 
+      addNotification("error", `${provider} ${action} failed`, message, 8000);
+
+      return {
+        status: "error",
         message,
-        ...(error instanceof Error && { logs: [error.stack || ''] })
+        ...(error instanceof Error && { logs: [error.stack || ""] }),
       };
     } finally {
       setIsLoading(false);
